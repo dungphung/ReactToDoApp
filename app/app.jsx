@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 var {Route, Router, IndexRoute, hashHistory} = require('react-router');
 
 
+var TodoApp = require('TodoApp');
 
 // Load foundation
 // add all features of foundation
@@ -13,6 +14,6 @@ $(document).foundation();
 require('style!css!sass!applicationStyles');
 
 ReactDOM.render(
-    <h1>Fucking did it</h1>,
+    <TodoApp />,
     document.getElementById("app")
 )
