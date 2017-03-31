@@ -21,7 +21,6 @@ module.exports = {
     },
     filteredTodos: function(todos, showCompleted, searchText) {
         var filteredTodos = todos;
-        debugger;
         // Filter by showCompleted
         filteredTodos = filteredTodos.filter((todo) => {
 
