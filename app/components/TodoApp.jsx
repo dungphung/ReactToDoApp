@@ -1,36 +1,34 @@
 var React = require('react');
+var uuid = require('node-uuid');
+
+
 var TodoList = require('TodoList');
 var AddTodo = require('AddTodo');
 var TodoSearch = require('TodoSearch');
-
+var TodoAPI = require('TodoAPI');
 
 var TodoApp = React.createClass({
     getInitialState: function() {
         return {
             showCompleted: false,
             searchText: '',
-            todos: [
-                {
-                    id: 1,
-                    text: 'Walk the dog'
-                }, 
-                {
-                    id: 2,
-                    text: 'Clean the yard'
-                },
-                {
-                    id: 3,
-                    text: 'Go to school'
-                },
-                {
-                    id: 4,
-                    text: 'hang out with my friend'
-                }
-            ]
+            todos: TodoAPI.getTodos()
         }
     },
+    componentDidUpdate() {
+        TodoAPI.setTodos(this.state.todos);
+    },
     handleAddTodo: function(text) {
-        alert('new todo: ' + text);
+        this.setState({
+            todos: [
+                ...this.state.todos,
+                {
+                    id: uuid(),
+                    text: text,
+                    completed: false
+                }
+            ]
+        });
     },
     handleSearch: function(showCompleted, searchText) {
         this.setState({
@@ -38,12 +36,24 @@ var TodoApp = React.createClass({
             searchText: searchText.toLowerCase()
         });
     },
+    handleToggle: function(id) {
+        var updatedTodos = this.state.todos.map( (todos) => {
+            if (todos.id === id) {
+                todos.completed = !todos.completed;
+            }
+            return todos;
+        });
+        debugger;
+        this.setState({todos: updatedTodos});
+    },
     render: function() {
-        var {todos} = this.state;
+        var {todos, showCompleted, searchText} = this.state;
+        var filteredTodos = TodoAPI.filteredTodos(todos, showCompleted, searchText);
+
         return (
             <div>
                 <TodoSearch onSearch={this.handleSearch} />
-                <TodoList todos={todos}/>
+                <TodoList todos={filteredTodos} onToggle={this.handleToggle}/>
                 <AddTodo onAddTodo={this.handleAddTodo} />
             </div>
         );
